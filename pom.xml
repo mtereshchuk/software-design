@@ -13,6 +13,7 @@
     <modules>
         <module>actors</module>
         <module>reactive</module>
+        <module>event-sourcing</module>
     </modules>
 
     <properties>
@@ -21,7 +22,7 @@
         <junit.version>5.1.0</junit.version>
         <mockito.version>3.1.0</mockito.version>
         <mockitokotlin.version>2.2.0</mockitokotlin.version>
-        <kotlin.version>1.3.70</kotlin.version>
+        <kotlin.version>1.3.71</kotlin.version>
     </properties>
 
     <dependencies>
@@ -46,6 +47,12 @@
             <groupId>com.nhaarman.mockitokotlin2</groupId>
             <artifactId>mockito-kotlin</artifactId>
             <version>${mockitokotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test</artifactId>
+            <version>1.3.71</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
