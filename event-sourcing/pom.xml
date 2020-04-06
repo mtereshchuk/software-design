@@ -15,10 +15,21 @@
     <packaging>jar</packaging>
 
     <properties>
+        <jetty.server.version>9.4.21.v20190926</jetty.server.version>
+        <jetty.servlet.version>9.4.21.v20190926</jetty.servlet.version>
     </properties>
 
     <dependencies>
-
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>${jetty.server.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>${jetty.servlet.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

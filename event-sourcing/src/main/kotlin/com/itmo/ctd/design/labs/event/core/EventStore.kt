@@ -5,7 +5,7 @@ import com.itmo.ctd.design.labs.event.event.Event
 /**
  * @author mtereshchuk
  */
-class LocalStorage {
+class EventStore {
     private val map = mutableMapOf<Int, MutableList<Event>>()
     private val subscribers = mutableListOf<(Int, Event) -> Unit>()
 

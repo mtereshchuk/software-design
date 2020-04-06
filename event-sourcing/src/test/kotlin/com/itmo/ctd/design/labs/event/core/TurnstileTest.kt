@@ -15,31 +15,32 @@ class TurnstileTest {
     fun `base test`() {
         val now = LocalDateTime.of(2020, 1, 1, 0, 0)
         val clock = TestClock(now)
-        val storage = LocalStorage()
-        val turnstile = Turnstile(storage, clock)
-        val managerAdmin = ManagerAdmin(storage, clock)
-        val id = managerAdmin.createAccount("John")
+        val eventStore = EventStore()
+        val turnstile = Turnstile(eventStore, clock)
+        val managerAdmin = ManagerAdmin(eventStore, clock)
+        val johnId = 1
+        managerAdmin.createAccount(johnId, "John")
 
-        assertFalse { turnstile.canGoInside(id) }
-        assertFalse { turnstile.canGoOutside(id) }
+        assertFalse { turnstile.canGoInside(johnId) }
+        assertFalse { turnstile.canGoOutside(johnId) }
 
-        managerAdmin.extendAccount(id, 1)
+        managerAdmin.extendAccount(johnId, 1)
         clock.plusHours(10)
-        assertTrue { turnstile.canGoInside(id) }
+        assertTrue { turnstile.canGoInside(johnId) }
 
-        turnstile.goInside(id)
-        assertFalse { turnstile.canGoInside(id) }
-        assertFails { turnstile.goInside(id) }
-        assertTrue { turnstile.canGoOutside(id) }
+        turnstile.goInside(johnId)
+        assertFalse { turnstile.canGoInside(johnId) }
+        assertFails { turnstile.goInside(johnId) }
+        assertTrue { turnstile.canGoOutside(johnId) }
 
-        turnstile.goOutside(id)
-        assertFalse { turnstile.canGoOutside(id) }
-        assertFails { turnstile.goOutside(id) }
+        turnstile.goOutside(johnId)
+        assertFalse { turnstile.canGoOutside(johnId) }
+        assertFails { turnstile.goOutside(johnId) }
 
         clock.plusHours(15)
-        assertFalse { turnstile.canGoInside(id) }
-        assertFalse { turnstile.canGoOutside(id) }
-        assertFails { turnstile.goInside(id) }
-        assertFails { turnstile.goOutside(id) }
+        assertFalse { turnstile.canGoInside(johnId) }
+        assertFalse { turnstile.canGoOutside(johnId) }
+        assertFails { turnstile.goInside(johnId) }
+        assertFails { turnstile.goOutside(johnId) }
     }
 }

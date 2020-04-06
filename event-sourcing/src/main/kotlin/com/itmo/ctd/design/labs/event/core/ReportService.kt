@@ -14,7 +14,7 @@ import java.time.temporal.ChronoUnit
 /**
  * @author mtereshchuk
  */
-class ReportService(private val localStorage: LocalStorage, private val clock: Clock) {
+class ReportService(eventStore: EventStore, private val clock: Clock) {
     private val startTime: LocalDate = clock.localDate()
     private var totalDuration = 0L
     private var visits = 0
@@ -22,14 +22,14 @@ class ReportService(private val localStorage: LocalStorage, private val clock: C
     private val weekInfo = mutableMapOf<DayOfWeek, Int>()
 
     init {
-        localStorage.subscribeFromEpochStart { i, event -> eventHandler(i, event) }
+        eventStore.subscribeFromEpochStart { i, event -> eventHandler(i, event) }
     }
 
     fun frequency(): Double {
-        return if (visits != 0)
-            visits.toDouble() / ChronoUnit.DAYS.between(startTime, clock.localDate()).toDouble()
-        else
-            0.0
+        return if (visits != 0) {
+            val daysBetween = ChronoUnit.DAYS.between(startTime, clock.localDate()).toDouble()
+            if (daysBetween > 0) visits.toDouble() else visits / daysBetween
+        } else 0.0
     }
 
     fun weekFrequency(): Map<DayOfWeek, Double> {

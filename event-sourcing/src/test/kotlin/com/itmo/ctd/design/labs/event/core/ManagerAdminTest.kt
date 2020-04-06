@@ -13,21 +13,23 @@ class ManagerAdminTest {
     fun `base test`() {
         val now = LocalDateTime.of(2020, 1, 1, 0, 0)
         val clock = TestClock(now)
-        val storage = LocalStorage()
-        val turnstile = Turnstile(storage, clock)
-        val managerAdmin = ManagerAdmin(storage, clock)
+        val eventStore = EventStore()
+        val turnstile = Turnstile(eventStore, clock)
+        val managerAdmin = ManagerAdmin(eventStore, clock)
 
-        val john = managerAdmin.createAccount("John")
-        val jack = managerAdmin.createAccount("Jack")
-        managerAdmin.extendAccount(john, 1)
-        managerAdmin.extendAccount(jack, 30)
+        val johnId = 1
+        val jackId = 2
+        managerAdmin.createAccount(johnId, "John")
+        managerAdmin.createAccount(jackId, "Jack")
+        managerAdmin.extendAccount(johnId, 1)
+        managerAdmin.extendAccount(jackId, 30)
 
         clock.plusHours(10)
-        turnstile.goInside(john)
-        turnstile.goOutside(john)
+        turnstile.goInside(johnId)
+        turnstile.goOutside(johnId)
 
-        val johnInfo = managerAdmin.getInfo(john)
-        val jackInfo = managerAdmin.getInfo(jack)
+        val johnInfo = managerAdmin.getInfo(johnId)
+        val jackInfo = managerAdmin.getInfo(jackId)
 
         assertEquals(johnInfo.name, "John", "Wrong name")
         assertEquals(jackInfo.name, "Jack", "Wrong name")

@@ -10,15 +10,15 @@ import java.time.LocalDate
 /**
  * @author mtereshchuk
  */
-class Turnstile(private val localStorage: LocalStorage, private val clock: Clock) {
+class Turnstile(private val eventStore: EventStore, private val clock: Clock) {
     fun goInside(id: Int) {
         require(canGoInside(id)) { "Can't go inside" }
-        localStorage[id] = UserCame(clock.localDateTime())
+        eventStore[id] = UserCame(clock.localDateTime())
     }
 
     fun goOutside(id: Int) {
         require(canGoOutside(id)) { "Can't go outside" }
-        localStorage[id] = UserWentOut(clock.localDateTime())
+        eventStore[id] = UserWentOut(clock.localDateTime())
     }
 
     fun canGoInside(id: Int): Boolean {
@@ -32,7 +32,7 @@ class Turnstile(private val localStorage: LocalStorage, private val clock: Clock
     }
 
     private fun collectInfo(id: Int): Pair<LocalDate, Boolean> {
-        val events = localStorage[id]
+        val events = eventStore[id]
         if (events.first() !is AccountCreation) {
             error("Account wasn't created")
         }

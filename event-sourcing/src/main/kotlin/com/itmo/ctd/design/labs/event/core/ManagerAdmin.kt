@@ -9,26 +9,26 @@ import com.itmo.ctd.design.labs.event.utils.nextExpirationDate
 import java.time.Clock
 import java.time.LocalDate
 import java.time.LocalDateTime
-import kotlin.random.Random
 
 /**
  * @author mtereshchuk
  */
-class ManagerAdmin(private val localStorage: LocalStorage, private val clock: Clock) {
-    fun createAccount(personName: String): Int {
-        val id = Random.nextInt(1000_000_000)
-        localStorage[id] = AccountCreation(clock.localDate(), personName)
-        return id
+class ManagerAdmin(private val eventStore: EventStore, private val clock: Clock) {
+    fun createAccount(id: Int, name: String) {
+        if (eventStore[id].firstOrNull() != null) {
+            error("$id is busy")
+        }
+        eventStore[id] = AccountCreation(clock.localDate(), name)
     }
 
     fun extendAccount(id: Int, days: Long) {
-        localStorage[id] = AccountExtension(clock.localDate(), days)
+        eventStore[id] = AccountExtension(clock.localDate(), days)
     }
 
-    fun getInfo(id: Int) = AccountInfo(localStorage, id)
+    fun getInfo(id: Int) = AccountInfo(eventStore, id)
 }
 
-class AccountInfo(localStorage: LocalStorage, id: Int) {
+class AccountInfo(eventStore: EventStore, id: Int) {
     var lastVisit: LocalDateTime? = null
         private set
     var expiration: LocalDate
@@ -37,7 +37,7 @@ class AccountInfo(localStorage: LocalStorage, id: Int) {
     val name: String
 
     init {
-        val events = localStorage[id]
+        val events = eventStore[id]
         if (events.first() !is AccountCreation) {
             error("Account wasn't created")
         }

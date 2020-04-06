@@ -14,20 +14,21 @@ class ReportServiceTest {
     fun `base test`() {
         val now = LocalDateTime.of(2020, 1, 1, 0, 0)
         val clock = TestClock(now)
-        val storage = LocalStorage()
-        val turnstile = Turnstile(storage, clock)
-        val managerAdmin = ManagerAdmin(storage, clock)
-        val reportService = ReportService(storage, clock)
+        val eventStore = EventStore()
+        val turnstile = Turnstile(eventStore, clock)
+        val managerAdmin = ManagerAdmin(eventStore, clock)
+        val reportService = ReportService(eventStore, clock)
         
         assertEquals(0.0, reportService.frequency(), "No visits")
         assertEquals(emptyMap(), reportService.weekFrequency(), "No visits")
         
-        val id = managerAdmin.createAccount("John")
-        managerAdmin.extendAccount(id, 30)
+        val johnId = 1
+        managerAdmin.createAccount(johnId, "John")
+        managerAdmin.extendAccount(johnId, 30)
         for (i in 1..14) {
             clock.plusDays(1)
-            turnstile.goInside(id)
-            turnstile.goOutside(id)
+            turnstile.goInside(johnId)
+            turnstile.goOutside(johnId)
         }
         
         val freq = reportService.weekFrequency()
