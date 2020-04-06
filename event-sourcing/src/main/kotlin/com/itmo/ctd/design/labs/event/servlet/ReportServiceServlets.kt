@@ -7,13 +7,13 @@ import javax.servlet.http.HttpServletResponse
 /**
  * @author mtereshchuk
  */
-class FrequencyServlet(private val reportService: ReportService) : AbstractServlet() {
+class FrequencyServlet(private val reportService: ReportService) : QueryServlet() {
     override fun baseDoGet(request: HttpServletRequest, response: HttpServletResponse) {
         printHtmlResponse(response, "Frequency - ${reportService.frequency()}")
     }
 }
 
-class WeekFrequencyServlet(private val reportService: ReportService) : AbstractServlet() {
+class WeekFrequencyServlet(private val reportService: ReportService) : QueryServlet() {
     override fun baseDoGet(request: HttpServletRequest, response: HttpServletResponse) {
         printHtmlResponse(response, "Week frequency - ${reportService.weekFrequency()}")
     }
