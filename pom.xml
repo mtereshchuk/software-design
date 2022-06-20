@@ -22,7 +22,7 @@
         <junit.version>5.1.0</junit.version>
         <mockito.version>3.1.0</mockito.version>
         <mockitokotlin.version>2.2.0</mockitokotlin.version>
-        <kotlin.version>1.3.71</kotlin.version>
+        <kotlin.version>1.6.0</kotlin.version>
     </properties>
 
     <dependencies>
